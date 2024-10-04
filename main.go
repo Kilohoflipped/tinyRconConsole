@@ -13,15 +13,19 @@ import (
 func main() {
 	go func() {
 		window := new(app.Window)
-		window.Option(app.Title("RconConsole"), app.Size(unit.Dp(1200), unit.Dp(800)))
+		windowSize := app.Size(unit.Dp(1200), unit.Dp(800))
+		window.Option(app.Title("RconConsole"), windowSize)
+		// window.Option(app.Decorated(false))
 
-		mainUI, err := mainAPP.NewUi(window)
+		mainUI, err := mainAPP.NewUI(window)
 		if err != nil {
 			log.Fatal(err)
 		}
+		// Run主窗体
 		if err := mainUI.Run(); err != nil {
 			log.Fatal(err)
 		}
+		// 安全退出
 		os.Exit(0)
 	}()
 	app.Main()
