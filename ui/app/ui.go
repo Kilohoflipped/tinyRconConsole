@@ -4,7 +4,9 @@ import (
 	"gioui.org/app"
 	"gioui.org/layout"
 	"gioui.org/op"
-	"gioui.org/widget/material"
+	"gioui.org/text"
+	"github.com/Mr-Ao-Dragon/tinyRconConsole/ui/app/router"
+	"github.com/Mr-Ao-Dragon/tinyRconConsole/ui/fonts"
 	"github.com/Mr-Ao-Dragon/tinyRconConsole/ui/pages/home"
 	"github.com/Mr-Ao-Dragon/tinyRconConsole/ui/uitheme"
 )
@@ -19,68 +21,62 @@ type UI struct {
 	window *app.Window
 	Theme  *uitheme.Theme
 
-	sidebar *Sidebar
+	router  *router.Router
 	headbar *Headbar
 
-	homeView *home.View
+	homePage *home.Page
 }
 
-func NewUi(w *app.Window) (*UI, error) {
+func NewUI(w *app.Window) (*UI, error) {
 	// 创建mainUI对象
 	u := &UI{
 		window: w,
 	}
 
-	gioTheme := material.NewTheme()
-	//fontCollection := fonts.AllFontFaces
-	//theme.Shaper = text.NewShaper(text.WithCollection(fontCollection))
-	u.Theme = uitheme.New(gioTheme, true)
+	fontCollection := fonts.AllFontFaces
 
-	u.sidebar = NewSidebar(u.Theme)
+	u.Theme = uitheme.New()
+	u.Theme.Shaper = text.NewShaper(text.WithCollection(fontCollection))
+	u.Theme.SetThemeState(uitheme.StateThemeDark)
+
+	u.router = router.NewRouter(u.Theme)
 	u.headbar = NewHeadbar(u.Theme)
 
-	u.homeView = home.NewView(u.Theme)
+	u.homePage = home.NewPage(u.Theme)
 
 	return u, nil
 }
 
-// Run 主窗体
 func (u *UI) Run() error {
+	// Run 主窗体
 	var ops op.Ops
+	// 主循环
 	for {
 		switch e := u.window.Event().(type) {
 
 		case app.DestroyEvent:
-			// 用户关闭窗体
 			return e.Err
 
 		case app.FrameEvent:
 			// 帧事件:正常运行
-			gtx := app.NewContext(&ops, e)
-			// 渲染UI
-			u.Layout(gtx)
-			// 最终在 GPU 上启动绘制。
-			e.Frame(gtx.Ops)
+			gtx := app.NewContext(&ops, e) // 每个帧都会创建全局布局上下文
+			u.Layout(gtx)                  // 在全局上下文里渲染UI
+			e.Frame(gtx.Ops)               // 根据当前帧的操作树绘制帧
 		}
 	}
 }
 
 func (u *UI) Layout(gtx LC) LD {
-
 	headbarLayout := layout.Rigid(func(gtx LC) LD {
 		return u.headbar.Layout(gtx, u.Theme)
 	})
 
-	sidebarLayout := layout.Rigid(func(gtx LC) LD {
-		return u.sidebar.Layout(gtx, u.Theme)
+	routerLayout := layout.Rigid(func(gtx LC) LD {
+		return u.router.Layout(gtx, u.Theme)
 	})
 
-	multiViewLayout := layout.Flexed(1, func(gtx LC) LD {
-		switch selectedPageIndexBuffer {
-		case 0:
-			return u.homeView.Layout(gtx, u.Theme)
-		}
-		return LD{}
+	homePageLayout := layout.Flexed(1, func(gtx LC) LD {
+		return u.homePage.Layout(gtx, u.Theme)
 	})
 
 	return layout.Flex{Axis: layout.Vertical}.Layout(gtx,
@@ -88,8 +84,8 @@ func (u *UI) Layout(gtx LC) LD {
 		// 侧边栏和multiView
 		layout.Flexed(1, func(gtx LC) LD {
 			return layout.Flex{Axis: layout.Horizontal}.Layout(gtx,
-				sidebarLayout,
-				multiViewLayout,
+				routerLayout,
+				homePageLayout,
 			)
 		}),
 	)

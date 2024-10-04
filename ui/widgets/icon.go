@@ -1,14 +1,23 @@
 package widgets
 
 import (
+	"gio.tools/icons"
 	"gioui.org/unit"
+	"gioui.org/widget"
 	"gioui.org/widget/material"
-	"github.com/Mr-Ao-Dragon/tinyRconConsole/ui/uitheme"
+	"image/color"
 )
 
-func MaterialIcons(name string, theme *uitheme.Theme) material.LabelStyle {
-	l := material.Label(theme.Material(), unit.Sp(24), "")
-	l.Font.Typeface = "MaterialIcons"
-	l.Text = name
-	return l
+func FontIcons(iconName string, iconSize int, iconColor color.NRGBA, theme THM) material.LabelStyle {
+	if iconSize <= 0 {
+		iconSize = 24
+	}
+	i := material.Label(theme.GetMaterialTheme(), unit.Sp(iconSize), "")
+	i.Font.Typeface = "FontAwes6Solid"
+	i.Text = iconName
+	i.Color = iconColor
+	return i
+}
+func GoVgIcons() *widget.Icon {
+	return icons.AVAVTimer
 }

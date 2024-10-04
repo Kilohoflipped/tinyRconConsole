@@ -18,7 +18,6 @@ type Headbar struct {
 	cache         *op.Ops
 
 	themeSwitchState *widget.Bool
-	themeSwitcher    material.SwitchStyle
 
 	iconDarkMode  material.LabelStyle
 	iconLightMode material.LabelStyle
@@ -26,15 +25,12 @@ type Headbar struct {
 
 func NewHeadbar(theme *uitheme.Theme) *Headbar {
 	h := &Headbar{
-		materialTheme: theme.Material(),
+		materialTheme: theme.GetMaterialTheme(),
 		cache:         new(op.Ops),
 	}
-	h.iconDarkMode = widgets.MaterialIcons("dark_mode", theme)
-	h.iconLightMode = widgets.MaterialIcons("light_mode", theme)
+	//h.iconDarkMode = widgets.FontIcons("dark_mode", theme)
+	//h.iconLightMode = widgets.FontIcons("light_mode", theme)
 
-	h.themeSwitcher = material.Switch(theme.Material(), h.themeSwitchState, "")
-	h.themeSwitcher.Color.Enabled = theme.SwitchBgColor
-	h.themeSwitcher.Color.Disabled = theme.Palette.Fg
 	return h
 }
 
@@ -44,13 +40,12 @@ func (h *Headbar) Layout(gtx layout.Context, theme *uitheme.Theme) layout.Dimens
 	headbarContent := layout.Rigid(func(gtx layout.Context) layout.Dimensions {
 		return layout.Background{}.Layout(gtx,
 			// 绘制背景
-			func(gtx layout.Context) layout.Dimensions {
-				// 如果背景不是暗色模式
-				if theme.IsThemeDark() {
-					defer clip.UniformRRect(image.Rectangle{Max: gtx.Constraints.Min}, 0).Push(gtx.Ops).Pop()
-					paint.Fill(gtx.Ops, theme.SideBarBgColor)
-				}
-				return layout.Dimensions{Size: gtx.Constraints.Min}
+			func(gtx LC) LD {
+
+				defer clip.UniformRRect(image.Rectangle{Max: gtx.Constraints.Min}, 0).Push(gtx.Ops).Pop()
+				paint.Fill(gtx.Ops, theme.WidgetsColorMap.ColorGeneralBg)
+
+				return LD{Size: gtx.Constraints.Min}
 			},
 			// 绘制背景上的组件
 			func(gtx layout.Context) layout.Dimensions {
@@ -75,6 +70,6 @@ func (h *Headbar) Layout(gtx layout.Context, theme *uitheme.Theme) layout.Dimens
 
 	return layout.Flex{Axis: layout.Vertical}.Layout(gtx,
 		headbarContent,
-		widgets.DrawLineFlex(theme.SeparatorColor, unit.Dp(1), unit.Dp(gtx.Constraints.Max.X)),
+		widgets.DrawLineFlex(theme.WidgetsColorMap.ColorThemeSeparator, unit.Dp(1), unit.Dp(gtx.Constraints.Max.X)),
 	)
 }

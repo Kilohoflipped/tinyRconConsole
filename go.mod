@@ -3,15 +3,15 @@ module github.com/Mr-Ao-Dragon/tinyRconConsole
 go 1.23.0
 
 require (
-
+	gio.tools/icons v0.0.0-20240708021058-44790e75e701
 	gioui.org v0.7.1
+	github.com/lucasb-eyer/go-colorful v1.2.0
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/nutsdb/nutsdb v1.0.4
 	github.com/rs/zerolog v1.33.0
 )
 
 require (
-
 	gioui.org/cpu v0.0.0-20210817075930-8d6a761490d2 // indirect
 	gioui.org/shader v1.0.8 // indirect
 	github.com/antlabs/stl v0.0.1 // indirect
