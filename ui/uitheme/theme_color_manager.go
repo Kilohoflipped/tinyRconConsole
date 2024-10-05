@@ -36,23 +36,8 @@ type NeutralColorPaletteMap struct {
 }
 
 type BrandColorPaletteMap struct {
-	brandMainColor color.NRGBA
-	brandColor1    color.NRGBA
-	brandColor2    color.NRGBA
-	brandColor3    color.NRGBA
-	brandColor4    color.NRGBA
-	brandColor5    color.NRGBA
-	brandColor6    color.NRGBA
-	brandColor7    color.NRGBA
-	brandColor8    color.NRGBA
-	brandColor9    color.NRGBA
-	brandColor10   color.NRGBA
-	brandColor11   color.NRGBA
-	brandColor12   color.NRGBA
-	brandColor13   color.NRGBA
-	brandColor14   color.NRGBA
-	brandColor15   color.NRGBA
-	brandColor16   color.NRGBA
+	BrandMainColor color.NRGBA
+	BrandColors    [16]color.NRGBA
 }
 
 var DefaultNeutralColorPalette = &NeutralColorPaletteMap{
@@ -93,34 +78,34 @@ func (t *Theme) MapWidgetsColor() {
 }
 
 func (t *Theme) MapWidgetsColorLight() {
-	tncp := t.neutralColorPalette
-	tbcp := t.brandColorPalette
+	tncp := t.NeutralColorPalette
+	tbcp := t.BrandColorPalette
 	t.Theme.Palette.Fg = tncp.gray4
 	t.Theme.Palette.Bg = tncp.gray16
-	t.Theme.Palette.ContrastFg = tbcp.brandMainColor
-	t.Theme.Palette.ContrastBg = tbcp.brandColor16
+	t.Theme.Palette.ContrastFg = tbcp.BrandMainColor
+	t.Theme.Palette.ContrastBg = tbcp.BrandColors[16-1]
 
 	t.WidgetsColorMap.ColorGeneralFg = tncp.gray4
 	t.WidgetsColorMap.ColorGeneralBg = tncp.gray16
-	t.WidgetsColorMap.ColorGeneralContrastFg = tbcp.brandMainColor
-	t.WidgetsColorMap.ColorGeneralContrastBg = tbcp.brandColor16
+	t.WidgetsColorMap.ColorGeneralContrastFg = tbcp.BrandMainColor
+	t.WidgetsColorMap.ColorGeneralContrastBg = tbcp.BrandColors[16-1]
 
 	t.WidgetsColorMap.ColorThemeSeparator = tncp.gray16
 }
 
 func (t *Theme) MapWidgetsColorDark() {
-	tncp := t.neutralColorPalette
-	tbcp := t.brandColorPalette
+	tncp := t.NeutralColorPalette
+	tbcp := t.BrandColorPalette
 
 	t.Theme.Palette.Fg = tncp.gray16
 	t.Theme.Palette.Bg = tncp.gray4
-	t.Theme.Palette.ContrastFg = tbcp.brandColor10
-	t.Theme.Palette.ContrastBg = tbcp.brandColor3
+	t.Theme.Palette.ContrastFg = tbcp.BrandColors[10-1]
+	t.Theme.Palette.ContrastBg = tbcp.BrandColors[3-1]
 
 	t.WidgetsColorMap.ColorGeneralFg = tncp.gray16
 	t.WidgetsColorMap.ColorGeneralBg = tncp.gray4
-	t.WidgetsColorMap.ColorGeneralContrastFg = tbcp.brandColor10
-	t.WidgetsColorMap.ColorGeneralContrastBg = tbcp.brandColor3
+	t.WidgetsColorMap.ColorGeneralContrastFg = tbcp.BrandColors[10-1]
+	t.WidgetsColorMap.ColorGeneralContrastBg = tbcp.BrandColors[3-1]
 
 	t.WidgetsColorMap.ColorThemeSeparator = tncp.gray7
 }

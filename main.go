@@ -22,7 +22,8 @@ func main() {
 			log.Fatal(err)
 		}
 		// Run主窗体
-		if err := mainUI.Run(); err != nil {
+		err = mainUI.Run()
+		if err != nil {
 			log.Fatal(err)
 		}
 		// 安全退出
