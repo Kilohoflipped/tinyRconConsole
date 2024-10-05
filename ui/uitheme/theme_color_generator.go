@@ -27,48 +27,17 @@ func init() {
 	}
 }
 
-func (p *BrandColorPaletteMap) GenerateColorPaletteFromMainColor(brandMainColor color.NRGBA) {
-	p.brandMainColor = brandMainColor
+func GenerateColorPaletteFromMainColor(brandMainColor color.NRGBA) *BrandColorPaletteMap {
+	p := &BrandColorPaletteMap{}
+	p.BrandMainColor = brandMainColor
 	for i := 1; i <= 16; i++ {
 		brandColor, err := CalculateBrandColorByChannel(brandMainColor, i)
 		if err != nil {
 			panic("calculate brand color fatal")
 		}
-		switch i {
-		case 1:
-			p.brandColor1 = brandColor
-		case 2:
-			p.brandColor2 = brandColor
-		case 3:
-			p.brandColor3 = brandColor
-		case 4:
-			p.brandColor4 = brandColor
-		case 5:
-			p.brandColor5 = brandColor
-		case 6:
-			p.brandColor6 = brandColor
-		case 7:
-			p.brandColor7 = brandColor
-		case 8:
-			p.brandColor8 = brandColor
-		case 9:
-			p.brandColor9 = brandColor
-		case 10:
-			p.brandColor10 = brandColor
-		case 11:
-			p.brandColor11 = brandColor
-		case 12:
-			p.brandColor12 = brandColor
-		case 13:
-			p.brandColor13 = brandColor
-		case 14:
-			p.brandColor14 = brandColor
-		case 15:
-			p.brandColor15 = brandColor
-		case 16:
-			p.brandColor16 = brandColor
-		}
+		p.BrandColors[i-1] = brandColor
 	}
+	return p
 }
 
 func CalculateBrandColorByChannel(brandMainColor color.NRGBA, channel int) (color.NRGBA, error) {
@@ -244,16 +213,16 @@ func (e *ColorRegressionEquationParams) CalculateColorLaby(channel int, colorLab
 		ly = 100
 	}
 
-	if ay < -127 {
-		ay = -127
-	} else if ay > 127 {
-		ay = 127
+	if ay < -100 {
+		ay = -100
+	} else if ay > 100 {
+		ay = 100
 	}
 
-	if by < -127 {
-		by = -127
-	} else if by > 127 {
-		by = 127
+	if by < -100 {
+		by = -100
+	} else if by > 100 {
+		by = 100
 	}
 
 	return [3]float32{ly, ay, by}

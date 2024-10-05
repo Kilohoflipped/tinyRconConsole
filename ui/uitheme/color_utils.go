@@ -2,11 +2,7 @@ package uitheme
 
 import (
 	"fmt"
-	"gioui.org/layout"
-	"gioui.org/op/clip"
-	"gioui.org/op/paint"
 	"github.com/lucasb-eyer/go-colorful"
-	"image"
 	"image/color"
 )
 
@@ -38,23 +34,30 @@ func GetUnStdLabFromNrgba(color color.NRGBA) ([3]float32, error) {
 	}
 	l, a, b := c.Lab()
 	l *= 100
-	a *= 128
-	b *= 128
+	a *= 100
+	b *= 100
 	return [3]float32{float32(l), float32(a), float32(b)}, nil
 }
 
 func GetNrgbaFromUnStdLab(lab [3]float32) color.NRGBA {
-	c := colorful.Lab(float64(lab[0]/100), float64(lab[1]/128), float64(lab[2]/128))
-	return color.NRGBA{R: uint8(c.R * 255), G: uint8(c.G * 255), B: uint8(c.B * 255), A: 255}
-}
+	c := colorful.Lab(float64(lab[0]/100), float64(lab[1]/100), float64(lab[2]/100))
+	if c.R < 0 {
+		c.R = 0
+	} else if c.R > 1 {
+		c.R = 1
+	}
 
-func ColorBox(gtx layout.Context, size image.Point, color color.NRGBA) layout.Dimensions {
-	// 创建矩形剪辑区域，右下角坐标为size,使用Push开始剪辑绘制，使用Pop在返回前结束绘制剪辑限制
-	defer clip.Rect{Max: size}.Push(gtx.Ops).Pop()
-	// 设置当前paint画笔颜色
-	paint.ColorOp{Color: color}.Add(gtx.Ops)
-	// 使用当前paint画笔填充当前剪辑区域
-	paint.PaintOp{}.Add(gtx.Ops)
-	// 返回布局实例
-	return layout.Dimensions{Size: size}
+	if c.G < 0 {
+		c.G = 0
+	} else if c.G > 1 {
+		c.G = 1
+	}
+
+	if c.B < 0 {
+		c.B = 0
+	} else if c.B > 1 {
+		c.B = 1
+	}
+
+	return color.NRGBA{R: uint8(c.R * 255), G: uint8(c.G * 255), B: uint8(c.B * 255), A: 255}
 }

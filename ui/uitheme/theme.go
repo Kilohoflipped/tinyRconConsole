@@ -10,8 +10,8 @@ type Theme struct {
 	*material.Theme
 	IsThemeDark bool
 
-	brandColorPalette   *BrandColorPaletteMap
-	neutralColorPalette *NeutralColorPaletteMap
+	BrandColorPalette   *BrandColorPaletteMap
+	NeutralColorPalette *NeutralColorPaletteMap
 
 	WidgetsColorMap *WidgetsColorMap
 }
@@ -22,8 +22,8 @@ func New() *Theme {
 			TextSize: unit.Sp(14),
 		},
 		IsThemeDark:         false,
-		neutralColorPalette: DefaultNeutralColorPalette,
-		brandColorPalette:   &BrandColorPaletteMap{},
+		NeutralColorPalette: DefaultNeutralColorPalette,
+		BrandColorPalette:   &BrandColorPaletteMap{},
 
 		WidgetsColorMap: &WidgetsColorMap{},
 	}
@@ -33,7 +33,7 @@ func New() *Theme {
 	t.Theme.Icon.CheckBoxUnchecked = icons.ToggleCheckBoxOutlineBlank
 	t.Theme.Icon.CheckBoxChecked = icons.ToggleCheckBox
 
-	t.brandColorPalette.GenerateColorPaletteFromMainColor(GetNrgbaFromNumHex(0x13F694))
+	t.BrandColorPalette = GenerateColorPaletteFromMainColor(GetNrgbaFromNumHex(0x0F6CBD))
 
 	t.MapWidgetsColor()
 	return t
